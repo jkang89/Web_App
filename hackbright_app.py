@@ -26,5 +26,7 @@ def main():
         if command == "student":
             get_student_by_github(*args) 
 
+    DB.close()
+
 if __name__ == "__main__":
     main()
