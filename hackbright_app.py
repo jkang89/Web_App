@@ -1,6 +1,7 @@
 import sqlite3
 
 DB = None
+CONN = None
 
 def get_student_by_github(github):
     query = """SELECT first_name, last_name, github FROM Students WHERE github = ?"""
@@ -11,8 +12,9 @@ Student: %s %s
 Github account: %s"""%(row[0], row[1], row[2])
 
 def connect_to_db():
-    global DB
-    DB = sqlite3.connect("hackbright.db").cursor()
+    global DB, CONN
+    CONN = sqlite3.connect("hackbright.db")
+    DB = CONN.cursor()
 
 def main():
     connect_to_db()
@@ -25,8 +27,10 @@ def main():
 
         if command == "student":
             get_student_by_github(*args) 
+        elif command == "new_student":
+            make_new_student(*args)
 
-    DB.close()
+    CONN.close()
 
 if __name__ == "__main__":
     main()
