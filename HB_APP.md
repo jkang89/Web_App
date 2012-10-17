@@ -18,7 +18,6 @@ On line 16, you can see how a connection is made:
 
 ### Step 2 -- Executing a Query
 Given a cursor, we can use it to execute a query. On line 7, we can see the query we want to execute. A few things to notice, we don't need a semicolon when we execute a query string. Also, where we would normally have a filter for our where clause, we have a question mark.
-    DB = sqlite3.connect("hackbright.db").cursor()
 
     query = """SELECT first_name, last_name, github FROM Students WHERE github = ?"""
 
