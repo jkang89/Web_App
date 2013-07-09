@@ -4,7 +4,7 @@ We'll be building a database that stores a list of students and their student pr
 
 Start by cloning this repository, then go into the project directory and type the following at your prompt:
 
-    sqlite3 my_database.db
+    sqlite3 hackbright.db
 
 At the prompt, enter the following commands to make the output a little prettier:
 
