@@ -35,7 +35,7 @@ As you write and test your code, make sure to run it inside a terminal that has 
 5. Deactivate your environment
 Just kidding, unless you're specifically going to activate another environment for a different project, don't worry about deactivating. Just open another window for that project.
 
-### Your Mission, Should You Choose To Accept It
+### Your Mission, Should You Choose To Accept It (You don't really have a choice here)
 There exists a python module named 'howdoi'. Importing it from inside a python program does nothing, but it _does_ install a useful program that can answer programming questions from the command line.
 
 First, verify that 'howdoi' is not installed on your machine:
@@ -45,9 +45,169 @@ First, verify that 'howdoi' is not installed on your machine:
 
 Your task is to create a new virtual environment, use pip to install howdoi, and ask howdoi a programming question:
 
+    (env)Meringue:sql_lesson chriszf$ howdoi tweet using python
+    from Twython import Twython
+
+    TWITTER_APP_KEY = 'xxxxx' #supply the appropriate value
+    TWITTER_APP_KEY_SECRET = 'xxxxx' 
+    TWITTER_ACCESS_TOKEN = 'xxxxxx'
+    TWITTER_ACCESS_TOKEN_SECRET = 'xxxxx'
+
+    t = Twython(app_key=TWITTER_APP_KEY, 
+                app_secret=TWITTER_APP_KEY_SECRET, 
+                oauth_token=TWITTER_ACCESS_TOKEN, 
+                oauth_token_secret=TWITTER_ACCESS_TOKEN_SECRET)
+
+    search = t.search(q='#omg',   #**supply whatever query you want here**
+                      count=100)
+
+    tweets = search['statuses']
+
+    for tweet in tweets:
+      print tweet['id_str'], '\n', tweet['text'], '\n\n\n'
+
+And this choice example:
+
     (env)Meringue:sql_lesson chriszf$ howdoi create a virtualenv
     pip freeze > env_modules.txt
     virtualenv my_env && cd my_env && source bin/activate
     pip install -r ../env_modules.txt
 
+The details of creating a virtual environment, activating it and installing a module with pip are left as an exercise to the reader. (Hint: look up what && does in bash then re-read the above example).
+
+Once you can install modules as you please, install the flask and sqlite3 modules using pip.
+
+Sipping From the Flask
+======================
+For us to have a web application, we must first have a web server. Writing such a thing for every web application would be pure tedium and requires more than a modicum of specific knowledge about HTTP, so we leave it to the experts. Instead, we use something called a framework. A framework forces us into writing programs in a style different from what we've written before, so we'll look at that briefly.
+
+So far, our programs have been 'imperative'. They have been a sequence of commands to be executed, one after the other. With enough time, all of them can be traced through the source, by which I mean we, as humans, can interpret the program, one line at a time, and enumerate all the functions that are called, and draw out a map of what happens.
+
+With Flask, we do something different. We activate the framework, which is essentially a web server. Before we run it, we create a few functions, and we install the functions as 'handlers' for specific events.
+
+First, let's see what happens when you run the framework without setting up handlers.
+
+Put the following lines into a file named webapp.py, then run it, making sure your virtualenv is activated.
+
+    from flask import Flask, render_template, request
+
+    app = Flask(__name__)
+
+    if __name__ == "__main__":
+        app.run()
+
+You should see the following:
+
+    Meringue:sql_lesson chriszf$ python webapp.py 
+     * Running on http://127.0.0.1:5000/
+
+If you try to access the webapp in your browser by going to http://127.0.0.1:5000/ or its alias, http://localhost:5000/, you will get nothing but 404 errors, indicating the url is not found. Before we can respond to any urls, we must first set up our event handlers.
+
+We can consider the act of a user accessing a url on our web server an 'event'. We create handlers that respond to those events, and install them in our framework. When the framework is running, it listens for many different kinds of events. If one does come up that it's been waiting for, it responds by invoking the handler function assigned to that event type. Whatever the handler returns is then returned back to the browser that caused the event to happen.
+
+### Hello World Wide Web
+Because that phrase isn't out of date. Ahem.
+
+First, we'll make the standard 'hello world' program, but output the results in our browser. Between the following lines, enter the following code:
+    
+    app = Flask(__name__)
+
+    # Code goes here
+
+    @app.route("/")
+    def helloworld():
+        return "Hello world"
+
+    if __name__ == "__main__":
+        app.run()
+
+If your app is still running in your terminal, kill it and restart it, then access http://localhost:5000/ in your browser. Tadaa, we're done.
+
+### We're Not Done
+Let's look at our hello world handler a little more closely.
+
+    @app.route("/")
+    def helloworld():
+        return "Hello world"
+
+There are three parts here: the url pattern decorator, the name of the handler, and the response of the handler.
+
+The most mysterious part is the pattern 'decorator', the first line. Decorators follow this format:
+
+    @decorator_name
+    def my_function():
+        ...
+
+A decorator 'decorates' a function. For now, we can consider a decorator to be an annotation, adding metadata to a function. In this case, our metadata indicates that this function is a url handler, and further more, it responds to the url "/".
+
+The name of the handler is mostly irrelevant for now. In flask, the return type of url handlers is a string. This fact will be important in a second.
+
+### Wiring Up Our Database
+Let's take a copy of our hackbright\_app.py file and put it in the same directory as our webapp.py. Take a moment to find a completed version. (There's probably a copy on your local machine, go ahead and use it, even if it's from another student. The 'find -n' command is helpful here.)
+
+In it, we should have a function that looks like the following:
+
+    def get_student_by_github(github):
+        query = """SELECT first_name, last_name, github FROM Students WHERE github = ?"""
+        DB.execute(query, (github,))
+        row = DB.fetchone()
+        print """\
+    Student: %s %s
+    Github account: %s"""%(row[0], row[1], row[2])
+
+We'll change it now, instead of printing the output, we'll return it:
+
+    def get_student_by_github(github):
+        query = """SELECT first_name, last_name, github FROM Students WHERE github = ?"""
+        DB.execute(query, (github,))
+        row = DB.fetchone()
+        return """\
+    Student: %s %s
+    Github account: %s"""%(row[0], row[1], row[2])
+
+Since this function returns a string, we can now use it in our handler. Back in webapp.py, change the handler name from helloworld to get\_student, and change the handler body as follows:
+
+    @app.route("/")
+    def get_student():
+        hackbright_app.connect_to_db()
+        student_github = "chriszf" # Change this as appropriate
+        return hackbright_app.get_student_by_github(student_github)
+
+We're going to use functions out of our hackbright\_app file, so we'll need to import it at the top:
+
+    import hackbright_app
+
+Kill your server and restart it if it's still running, then reload your browser. You should see student data showing up.
+
+### Request Arguments
+We now have a database-backed web application, that's all there is to it.
+
+...
+
+Okay, fine.
+
+We need to make it more better-er. At the very least, we need a way for it to display information for a student besides the one hardcoded. To do that, we have to collect input from the person using the browser. One mechanism for acquiring that input is called the 'request arguments'. Are called the request arguments? Whatever.
+
+The request arguments are a set of key/value pairs that the user can send to the web server on the other end via the url. An example url with request arguments would look like this:
+
+    http://localhost:5000/?key1=val1&key2=val2
+
+A question mark after a url tells the server that the remainder of the line is not part of the url. It indicates that anything that follows is a set of key/value pairs in the form of key=val, with each pair separated by an ampersand. In flask, the set of pairs gets transformed into a dictionary and placed in a special variable, request.args. If you were to print request.args from inside the handler that responds to the above url, you would see the following:
+
+    print request.args
+    => { "key1": "val1", "key2": "val2" }
+
+We'll use this to collect the student's github username from the user. The request.args variable is a dictionary. To be safe, just in case they don't enter anything, we'll use the .get() method. Modify your get\_student handler as follows:
+
+    @app.route("/")
+    def get_student():
+        hackbright_app.connect_to_db()
+        student_github = request.args.get("student")
+        return hackbright_app.get_student_by_github(student_github)
+
+Now try accessing your application with the following url, changing the github account as appropriate:
+
+    http://localhost:5000/?student=chriszf
+
+[Jawesome.](http://en.wikipedia.org/wiki/Street_Sharks)
 
