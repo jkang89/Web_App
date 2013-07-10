@@ -75,7 +75,7 @@ And this choice example:
 
 The details of creating a virtual environment, activating it and installing a module with pip are left as an exercise to the reader. (Hint: look up what && does in bash then re-read the above example).
 
-Once you can install modules as you please, install the flask and sqlite3 modules using pip.
+Once you can install modules as you please, activate your virtual environment then install the flask and sqlite3 modules using pip.
 
 Sipping From the Flask
 ======================
@@ -94,7 +94,7 @@ Put the following lines into a file named webapp.py, then run it, making sure yo
     app = Flask(__name__)
 
     if __name__ == "__main__":
-        app.run()
+        app.run(debug=True)
 
 You should see the following:
 
@@ -119,7 +119,7 @@ First, we'll make the standard 'hello world' program, but output the results in 
         return "Hello world"
 
     if __name__ == "__main__":
-        app.run()
+        app.run(debug=True)
 
 If your app is still running in your terminal, kill it and restart it, then access http://localhost:5000/ in your browser. Tadaa, we're done.
 
@@ -211,3 +211,144 @@ Now try accessing your application with the following url, changing the github a
 
 [Jawesome.](http://en.wikipedia.org/wiki/Street_Sharks)
 
+
+### Mad Libs Time
+Remember mad libs? Give me a noun, an adjective, a plural noun and a verb. This next part is a _lot_ like that. First, some setup.
+
+In our current directory, an ls command should produce the following:
+
+    env/
+    webapp.py
+    hackbright_app.py
+
+We need to add a two more directories, one named 'static' and one named 'templates'. Do that now. Your directory should look like this:
+
+    env/
+    static/
+    templates/
+    webapp.py
+    hackbright_app.py
+
+Now, we make a mad lib. Remember, a mad lib is basically a template with a series of spaces for you to fill in with context free words.
+
+    The ___noun___ ___verb___ ___adverb___.
+
+The general procedure is to ask a friend for words to fill the template without letting them know the context they are to be used. Asking me for words and filling them in, you might get the following:
+
+    The fish crept stealthily.
+
+We apply the same idea to our webapp. Currently, our student information is displayed pretty terribly. We're going to make it display differently using templates. It will still look terrible, but in a different way. First we create a file in our 'templates' directory named student\_info.html, and we fill it with the string we're generating in the get\_student\_by\_github function.
+
+    Student: %s %s
+    Github account: %s
+
+The first %s is the student's first name, the second is their last name, and the third is their github id. In Jinja, the templating system we use, our placeholders are indicated by double braces. Written with these rules, our mad lib example would look like this:
+
+    The {{noun}} {{verb}} {{adverb}}.
+
+In our html file, we make the following change:
+
+    Student: {{first_name}} {{last_name}}
+    Github account: {{github}}
+
+Save your file, then we'll make changes in hackbright\_app.py, then webapp.py.
+
+In hackbright\_app.get\_student\_by\_github, we return a string containing the formatted student data. We now have a template, so instead of returning the string, we'll return the pieces of data we need to fill our template. Modify the function so that it simply returns the row:
+
+    def get_student_by_github(github):
+        query = """SELECT first_name, last_name, github FROM Students WHERE github = ?"""
+        DB.execute(query, (github,))
+        row = DB.fetchone()
+        return row
+
+Moving to webapp.py, we need to collect call get\_student\_by\_github to get the row. Then we need to feed the data into the template and fill in the pieces. Once we've filled in the template, we can return the string of the filled template and let the browser render it.
+
+    @app.route("/student")
+    def get_student():
+        hackbright_app.connect_to_db()
+        student_github = request.args.get("student")
+        row = hackbright_app.get_student_by_github(student_github)
+        html = render_template("student_info.html", first_name=row[0],
+                                                    last_name=row[1],
+                                                    github=row[2])
+        return html
+
+Notice, before going on, that I've changed the url our handler will respond to. This is important for later.
+
+Let's look a little closer. The magic happens on the fourth and fifth lines. First, we call get\_student\_by\_github to get a tuple representing the row of data from the database. Next, we make a call to render\_template. The first argument is the name of the template file we created earlier. After that, each keyword argument is the name of a placeholder in the template to be filled, along with the value to fill it with. Mull over the line for a second and make sure you can connect all of the argument names to the placeholders. No, seriously, mull. Mull _harder_.
+
+This is pretty important. Once you're satisfied with the way the data gets filled in, we can now style our html. I'm going to warn you though, it's not going to be pretty. Here's how I changed my student\_info.html. Feel free to go hog wild on your own.
+
+    <html>
+    <body>
+    <h1>Student: {{last_name}}, {{first_name}}</h1>
+    <h2>Github: {{github}}</h2>
+    <p>This student has shown extreme recalcitrance and has generally proved to be unreliable.</p>
+    <p>It is my recommendation that they be put on double-secret probation for the remainder of the course.</p>
+    </body>
+    </html>
+
+Behold your majesty at http://localhost:5000/student?github=chriszf
+
+### User Input Revisited
+Now we have a webapp, _done_.
+
+OKAY FINE.
+
+We do sort of have a webapp. It's an application where a user can enter some input and receive a response backed by a database. The last remaining issue here is that our input collection mechanism is pretty ugly. We can't ask our users to enter information via the url every time. Heck, we can't even ask our users to remember what our url is half the time. Users are pretty dumb.
+
+The standard way to ask for data is to display a form. The user fills in the form and submits it, and our webapp takes that input and processes it as before.
+
+Building forms (at this stage) is essentially a static process. The page displaying the form won't change dynamically with some other input, so we simply need to make an html page. Create a file in your templates directory called get\_github.html, and put the following in it.
+
+    <html>
+    <body>
+    <form action="/student">
+    <label for="github">Enter github id</label>
+    <input type="text" name="github" />
+    <input type="submit">
+    </form>
+    </body>
+    </html>
+
+If we tried to view this file in our browser, perhaps by going to http://localhost:5000/get\_github.html, you would get a 404. Remember that our webapp only responds to the events we specify in our webapp.py. It's not sufficient to have a template, we have to have a handler that will display the template. In your webapp.py file, before your existing handler, add the new one:
+
+    @app.route("/")
+    def get_github():
+        return render_template("get_github.html")
+
+This handler is simpler than the other one we wrote. Whenever a user browses to http://localhost:5000/, it will simply render the template get\_github.html. Load the url in your browser now.
+
+If you're not familiar with html forms, try deleting the label tag and either of the input tags and reloading your browser to see how they behave before moving on. Make sure you understand which on-screen element is attached to which tag.
+
+The meat of this file is the line
+
+    <form action="/student">
+
+This tells the browser where to send the form values when the user clicks submit. Here, it sends the form data to the first handler that we built earlier. That handler expects the student's github id in the form of a key/value pair. The value is obviously whatever the user types into the text field, but where is the key?
+
+The key for a value that is inputted by a user is stored on the html element as the name attribute. Whew. That was a mouthful. Just look at the following line:
+
+    <input type="text" name="github" />
+
+This html tag displays a text field for the user to type in. The 'name' attribute on the tag specifies the key that will be used for the value when the form is submitted. If that's unclear, try entering a value then submitting the form. Inspect the url request arguments on the next page. Go back, change the name attribute, submit again and inspect the url again and see how they've changed.
+
+If you were being observant, you would have noticed that the first time you submitted, everything _worked_. We now have a webapp, a proper one even. It's a little bit duct-taped together, but it's still complete. It displays a form to a user, collects data, processes the submitted form, then displays the result.
+
+Furthermore, now we have a context we can use to talk about _all_ webapps ever. Every webapp is a series of page-pairs. One for displaying a form, and one for processing it. These pages all link to each other with standard 'a' tags, and all of those links give the illusion of having a single cohesive application. Sometimes multiple forms show up on the same page, and sometimes two different forms end up getting processed in the same way, but the principle still stands. If you think of webapps as a series of forms, you can decompose and reconstruct pretty much any webapp in existence. Yes, even facebook.
+
+### What Now?
+Well, our app works, but it's pretty brittle. If you leave the form empty and submit, it breaks. If you enter a user who's not in the database, it breaks. Basically if you look at it funny, it breaks. That's okay, because flask gives us a bunch of tools to make our apps significantly more robust. We're not going to worry about them here, right now we're going to focus on the general layout of our app and the integration of HTML and Python.
+
+Here are your tasks:
+
+1. On the get\_student handler, display a user's grades for all of their projects they've completed.
+2. On the same page, when you click on a project name, it brings you to a page listing all students and their grades for that particular project. You will need a new handler for this page.
+3. From _that_ page, when clicking on a student's github account, it sends you back to the get\_student handler.
+4. Make a pair of handlers that allows a user to create a new student record.
+5. Make a pair of handlers that allows a user to create a new project record.
+6. Make a handler that allows a user to grade a student on a given project.
+7. Add links to pages that allow you to navigate the entirety of the app &mdash; you should never have to manually enter a URL to reach a particular handler.
+8. Make it look pretty.
+
+And that's it. Congratulations, achievement unlocked, 'built a webapp'. It's ugly and delicate, but it's yours. Cherish it. There. **Now** we're done.
