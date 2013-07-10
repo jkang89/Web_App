@@ -75,7 +75,7 @@ And this choice example:
 
 The details of creating a virtual environment, activating it and installing a module with pip are left as an exercise to the reader. (Hint: look up what && does in bash then re-read the above example).
 
-Once you can install modules as you please, activate your virtual environment then install the flask and sqlite3 modules using pip.
+Once you can install modules as you please, activate your virtual environment then install the flask module using pip.
 
 Sipping From the Flask
 ======================
