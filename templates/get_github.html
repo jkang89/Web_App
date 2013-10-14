@@ -1,17 +1,11 @@
-<html>
-    <head>
-        <title>Sign In</title>
-    </head>
-    <body>
-        <p>This is where you sign in.</p>
-        <form action = "/student">
-            <label for = "github">Enter github id</label>
-            <input type = "text" name = "github" />
-            <input type = "submit">
-        </form>
-        <p>If you don't have a github, <a href="http://www.github.com">sign up here</a>!</p>
-        <p>If you aren't registered, <a href="/register">please register here</a>.
-        <p>If you'd like to add a project, <a href="/new_project">click here</a>.
-        <p>To update a student's grade, <a href="/enter_grade">click here</a>.
-    </body>
-</html>
+{% extends "menu.html" %}
+{% block content %}
+<p>This is where you sign in.</p>
+<form action = "/student">
+    <label for = "github">Enter github id</label>
+    <input type = "text" name = "github" />
+    <input type = "submit">
+</form>
+
+{% endblock %}
+

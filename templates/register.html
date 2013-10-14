@@ -1,14 +1,12 @@
-<html>
-    <head></head>
-    <body>
+{% extends "menu.html" %}
+{% block content %}
         <form action = "/success">
             <label for = "first_name">Enter your first name here.</label>
-            <input type = "text" name = "first_name" />
+            <input type = "text" name = "first_name" /><br>
             <label for = "last_name">Enter your last name here.</label>
-            <input type = "text" name = "last_name" />
+            <input type = "text" name = "last_name" /><br>
             <label for = "github">Enter your github id here.</label>
-            <input type = "text" name = "github" />
+            <input type = "text" name = "github" /><br>
             <input type = "submit">
         </form>
-    </body>
-</html>
+{% endblock %}

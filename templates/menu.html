@@ -1,0 +1,45 @@
+<html>
+    <head>
+        <style>
+            body {
+                background-image: url("http://0.static.wix.com/media/145b9b_73481ab7655759016364ae33e84105c4.jpg_1024");
+                background-size: 100%; 
+                background-repeat: no-repeat;
+            }
+            div {
+                padding: 1em;
+                border-radius: 25px;
+                font-family: arial;
+            }
+            .content {
+                background-color: rgba(255,255,255,0.5);
+                float: right;
+                margin: 2em;
+                width: 500px;
+
+            }
+            .nav {
+                background-color: rgba(255,255,255,0.5);
+                margin: 1em;
+
+            }
+            a {
+                text-decoration: none;
+                color: white;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="nav">Menu: <a href="/">login</a> | 
+                <a href="/enter_grade">add grade</a> | 
+                <a href="/register">add student</a> | 
+                <a href="/new_project">add project</a>
+        </div>
+        <div class="content">
+            {% block content %}{% endblock %}
+        </div>
+    </body>
+</html>

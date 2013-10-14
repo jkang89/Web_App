@@ -1,5 +1,5 @@
-<html>
-    <body>
+{% extends "menu.html" %}
+{% block content %}
         <h1>Student: {{first_name}} {{last_name}}</h1>
         <h2>Github account: {{github}}</h2>
         <p> This student has shown extreme recalcitrance and has generally proved to be unreliable.</p>
@@ -8,8 +8,5 @@
         <a href="/project?project={{grade[1]}}">{{grade[1]}}</a> : {{grade[2]}}
         <br> 
         {% endfor %}
-    </body>
-</html>
-
-
+{% endblock %}
 

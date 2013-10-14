@@ -1,6 +1,6 @@
-<html>
-    <head></head>
-    <body>
+{% extends "menu.html" %}
+{% block content %}
+
         <form action = "/enter_grade_success">
             <label for = "student_github">Enter the student's github account.</label>
             <input type = "text" name = "student_github" /><br>
@@ -10,5 +10,5 @@
             <input type = "text" name = "student_grade" /><br>
             <input type = "submit">
         </form>
-    </body>
-</html>
+
+{% endblock %}

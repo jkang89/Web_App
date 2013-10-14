@@ -1,6 +1,5 @@
-<html>
-    <head></head>
-    <body>
+{% extends "menu.html" %}
+{% block content %}
         <form action = "/new_project_success">
             <label for = "project_title">Enter the title of the project.</label>
             <input type = "text" name = "project_title" /><br>
@@ -10,5 +9,4 @@
             <input type = "text" name = "max_grade" /><br>
             <input type = "submit">
         </form>
-    </body>
-</html>
+{% endblock %}
