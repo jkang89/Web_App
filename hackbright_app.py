@@ -7,20 +7,16 @@ def get_student_by_github(github):
     query = """SELECT first_name, last_name, github FROM Students WHERE github = ?"""
     DB.execute(query, (github,))
     row = DB.fetchone()
-    print """\
-Student: %s %s
-Github account: %s"""%(row[0], row[1], row[2])
+    return row
+
 
 
 def get_project_by_title(title):
     query = """SELECT title, description, max_grade FROM Projects WHERE title = ?"""
     DB.execute(query, (title,))
     row = DB.fetchone()
-    print """\
-Project: %s
-Desc: %s
-Max Grade: %s""" %(row[0], row[1], row[2])
-
+    return row
+    
 def get_grade_by_project(project_title):
     query = """SELECT student_github, project_title, grade FROM Grades WHERE project_title = ?"""
     DB.execute(query, (project_title,))
@@ -34,10 +30,7 @@ def show_grades(student_github):
     query = """SELECT student_github, project_title, grade FROM Grades WHERE student_github = ?"""
     DB.execute(query, (student_github,))
     rows = DB.fetchall()
-    print """\
-Student: %s
-Project: %s
-Grade: %s""" %(row[0], row[1], row[2])
+    return rows 
 
 def make_new_project(title, description, max_grade):
     query = """INSERT into Projects values (?, ?, ?)"""
