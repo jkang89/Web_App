@@ -16,7 +16,7 @@ def get_project_by_title(title):
     DB.execute(query, (title,))
     row = DB.fetchone()
     return row
-    
+
 def get_grade_by_project(project_title):
     query = """SELECT student_github, project_title, grade FROM Grades WHERE project_title = ?"""
     DB.execute(query, (project_title,))
@@ -32,6 +32,12 @@ def show_grades(student_github):
     rows = DB.fetchall()
     return rows 
 
+def show_grades_by_project(project_title):
+    query = """SELECT student_github, project_title, grade FROM Grades WHERE project_title = ?"""
+    DB.execute(query, (project_title,))
+    rows = DB.fetchall()
+    return rows 
+
 def make_new_project(title, description, max_grade):
     query = """INSERT into Projects values (?, ?, ?)"""
     DB.execute(query, (title, description, max_grade))
@@ -44,7 +50,7 @@ def make_new_student(first_name, last_name, github):
     DB.execute(query, (first_name, last_name, github))
 
     CONN.commit()
-    print "Successfully added student: %s %s" % (first_name, last_name)
+    return "Success"
 
 def make_grade(student_github, project_title, grade):
     query = """INSERT into Grades values (?, ?, ?)"""

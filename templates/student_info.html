@@ -5,7 +5,7 @@
         <p> This student has shown extreme recalcitrance and has generally proved to be unreliable.</p>
         <p>It is my recommentation that they be put on double-secret probation for the remainder of the course.</p>
         {% for grade in grades %}
-        <a href="/project">{{grade[1]}}</a> : {{grade[2]}}
+        <a href="/project?project={{grade[1]}}">{{grade[1]}}</a> : {{grade[2]}}
         <br> 
         {% endfor %}
     </body>
