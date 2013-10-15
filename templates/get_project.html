@@ -1,5 +1,6 @@
 {% extends "menu.html" %}
 {% block content %}
+        <h1>Project: {{projects[0][1]}}</h1>
         {% for project in projects %}
         <a href="/student?github={{project[0]}}">{{project[0]}}</a>: {{project[1]}}, {{project[2]}}<br>
         {% endfor %}

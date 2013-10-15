@@ -2,7 +2,7 @@
     <head>
         <style>
             body {
-                background-image: url("http://0.static.wix.com/media/145b9b_73481ab7655759016364ae33e84105c4.jpg_1024");
+                background-image: url("/static/chalkboard.jpg");
                 background-size: 100%; 
                 background-repeat: no-repeat;
             }
@@ -10,6 +10,7 @@
                 padding: 1em;
                 border-radius: 25px;
                 font-family: arial;
+                border: 3px solid #9dce2c;
             }
             .content {
                 background-color: rgba(255,255,255,0.5);
@@ -23,6 +24,9 @@
                 margin: 1em;
 
             }
+            .form {
+                float: right;
+            }
             a {
                 text-decoration: none;
                 color: white;
@@ -30,10 +34,65 @@
             a:hover {
                 text-decoration: underline;
             }
+            .button  {
+                -moz-box-shadow:inset 0px 1px 0px 0px #c1ed9c;
+                -webkit-box-shadow:inset 0px 1px 0px 0px #c1ed9c;
+                box-shadow:inset 0px 1px 0px 0px #c1ed9c;
+                background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #9dce2c), color-stop(1, #8cb82b) );
+                background:-moz-linear-gradient( center top, #9dce2c 5%, #8cb82b 100% );
+                filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#9dce2c', endColorstr='#8cb82b');
+                background-color:#9dce2c;
+                -webkit-border-top-left-radius:20px;
+                -moz-border-radius-topleft:20px;
+                border-top-left-radius:20px;
+                -webkit-border-top-right-radius:20px;
+                -moz-border-radius-topright:20px;
+                border-top-right-radius:20px;
+                -webkit-border-bottom-right-radius:20px;
+                -moz-border-radius-bottomright:20px;
+                border-bottom-right-radius:20px;
+                -webkit-border-bottom-left-radius:20px;
+                -moz-border-radius-bottomleft:20px;
+                border-bottom-left-radius:20px;
+                text-indent:0;
+                border:1px solid #83c41a;
+                display:inline-block;
+                color:#ffffff;
+                font-family:Arial;
+                font-size:15px;
+                font-weight:bold;
+                font-style:normal;
+                height: 50px;
+                line-height:40px;
+                width:80px;
+                text-decoration:none;
+                text-align:center;
+                text-shadow:1px 1px 9px #689324;
+            }
+            .button:hover {
+                background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #8cb82b), color-stop(1, #9dce2c) );
+                background:-moz-linear-gradient( center top, #8cb82b 5%, #9dce2c 100% );
+                filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#8cb82b', endColorstr='#9dce2c');
+                background-color:#8cb82b;
+            }.button:active {
+                position:relative;
+                top:1px;
+            }
+            input {
+                border: 1px solid black;
+                height: 25px;
+                padding: 5px;
+
+            }
+            select {
+                border: 1px solid black;
+                height: 25px;
+                background-color: white;
+            }
         </style>
     </head>
     <body>
-        <div class="nav">Menu: <a href="/">login</a> | 
+        <div class="nav">Gradinator Menu: <a href="/">login</a> | 
                 <a href="/enter_grade">add grade</a> | 
                 <a href="/register">add student</a> | 
                 <a href="/new_project">add project</a>

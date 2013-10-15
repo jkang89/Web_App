@@ -1,14 +1,25 @@
 {% extends "menu.html" %}
 {% block content %}
 
+        <h1>Enter a New Grade</h1>
         <form action = "/enter_grade_success">
             <label for = "student_github">Enter the student's github account.</label>
-            <input type = "text" name = "student_github" /><br>
+            <select name = "student_github">
+            {% for github in githubs %}
+            <option value = "{{github[0]}}">{{github[0]}}</option>
+            {% endfor %}
+            </select>
+            <br><br>
             <label for = "project_title">Enter the the title of the project.</label>
-            <input type = "text" name = "project_title" /><br>
+            <select name = "project_title">
+            {% for project in projects %}
+            <option value = "{{project[0]}}">{{project[0]}}</option>
+            {% endfor %}
+            </select>
+            <br><br>
             <label for = "student_grade">Enter the number of points earned by the student.</label>
-            <input type = "text" name = "student_grade" /><br>
-            <input type = "submit">
+            <input type = "text" name = "student_grade" /><br><br>
+            <input class = "button" type = "submit">
         </form>
 
 {% endblock %}

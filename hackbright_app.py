@@ -59,6 +59,17 @@ def make_grade(student_github, project_title, grade):
     CONN.commit()
     print "Successfully added grade: %s" % (grade)
 
+def get_githubs(): 
+    query = """SELECT github FROM Students"""
+    DB.execute(query )
+    rows = DB.fetchall()
+    return rows
+
+def get_project_titles():
+    query = """SELECT title FROM Projects"""
+    DB.execute(query)
+    rows = DB.fetchall()
+    return rows
 
 def connect_to_db():
     global DB, CONN

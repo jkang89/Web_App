@@ -59,7 +59,10 @@ def new_project_success():
 
 @app.route("/enter_grade")
 def enter_grade():
-    return render_template("enter_grade.html")
+    hackbright_app.connect_to_db()
+    githubs = hackbright_app.get_githubs()
+    projects = hackbright_app.get_project_titles()
+    return render_template("enter_grade.html", githubs = githubs, projects = projects)
 
 @app.route("/enter_grade_success")
 def enter_grade_success():

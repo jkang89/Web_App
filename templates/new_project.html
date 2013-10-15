@@ -1,12 +1,13 @@
 {% extends "menu.html" %}
 {% block content %}
+        <h1>Add A Project</h1>
         <form action = "/new_project_success">
             <label for = "project_title">Enter the title of the project.</label>
-            <input type = "text" name = "project_title" /><br>
+            <input type = "text" name = "project_title" /><br><br>
             <label for = "project_description">Enter a description of the project.</label>
-            <input type = "text" name = "project_description" /><br>
+            <input type = "text" name = "project_description" /><br><br>
             <label for = "max_grade">Enter the maximum amount of points for the project.</label>
-            <input type = "text" name = "max_grade" /><br>
-            <input type = "submit">
+            <input type = "text" name = "max_grade" /><br><br>
+            <input class = "button" type = "submit">
         </form>
 {% endblock %}
