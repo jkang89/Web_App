@@ -1,7 +1,7 @@
 {% extends "menu.html" %}
 {% block content %}
         <h1>Add A Project</h1>
-        <form action = "/new_project_success">
+        <form action = "/new_project_success" method = "POST">
             <label for = "project_title">Enter the title of the project.</label>
             <input type = "text" name = "project_title" /><br><br>
             <label for = "project_description">Enter a description of the project.</label>

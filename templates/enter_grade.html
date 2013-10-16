@@ -2,7 +2,7 @@
 {% block content %}
 
         <h1>Enter a New Grade</h1>
-        <form action = "/enter_grade_success">
+        <form action = "/enter_grade_success" method = "POST">
             <label for = "student_github">Enter the student's github account.</label>
             <select name = "student_github">
             {% for github in githubs %}
